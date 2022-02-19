@@ -6,6 +6,8 @@
   - [Bases à retenir](#bases-à-retenir)
 - [Commentaires](#commentaires)
   - [Syntaxe](#syntaxe)
+- [Constantes](#constantes)
+- [Tableaux](#tableaux)
 
 ## Bases
 
