@@ -73,3 +73,15 @@ for ($d = 0; $d < count($array); $d++) {
     echo "😘 - ";
   }
 }
+
+// Tableau clés/valeurs (ou associatif)
+$associativeArray = [
+  "id" => 1,
+  "name" => "Jean-Paul",
+  "age" => 38
+];
+
+var_dump($associativeArray);
+
+echo "<br />";
+echo $associativeArray["name"];
