@@ -14,7 +14,7 @@
   - [Paramètres, valeur par défaut](#paramètres-valeurs-par-défaut)
   - [Valeur de retour](#valeur-de-retour)
 - [Programmation orientée objet](#programmation-orientée-objet)
-  - [Les classes](##les-classes)
+  - [Les classes](#les-classes)
   - [1. Définition d'une classe](#1-définition-dune-classe)
     - [Attributs & méthodes](#attributs--méthodes)
     - [Portées](#portées)
