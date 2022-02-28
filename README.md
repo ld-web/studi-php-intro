@@ -13,6 +13,15 @@
 - [Fonctions](#fonctions)
   - [Paramètres, valeur par défaut](#paramètres-valeurs-par-défaut)
   - [Valeur de retour](#valeur-de-retour)
+- [Programmation orientée objet](#programmation-orientée-objet)
+  - [Les classes](##les-classes)
+  - [1. Définition d'une classe](#1-définition-dune-classe)
+    - [Attributs & méthodes](#attributs--méthodes)
+    - [Portées](#portées)
+    - [Encapsulation](#encapsulation)
+  - [2. Instanciation d'objets de classes](#2-instanciation-dobjets-de-classes)
+  - [Constructeur](#constructeur)
+  - [Constantes de classe](#constantes-de-classe)
 
 ## Bases
 
@@ -228,3 +237,205 @@ Dans ce cas, on peut récupérer la valeur retournée dans le code appelant :
 // on récupère et on met dans la variable $paragraph la valeur retournée depuis la fonction paragraphMajuscules
 $paragraph = getParagraphUppercase("Hello world");
 ```
+
+## Programmation orientée objet
+
+La POO représente un changement de paradigme significatif. Nous allons parler dans cette partie des différentes notions à savoir pour pouvoir concevoir une architecture qui s'articule autour d'objets, capables de représenter des structures plus complexes que des variables simples (int, string, bool, etc...).
+
+### Les classes
+
+Pour représenter ces structures plus complexes, on peut commencer par définir des **classes** dans notre application.
+
+Une classe représente un **nouveau type** utilisable dans notre application. C'est comme un squelette, une structure, ou un template, si vous voulez, qui représente une notion complexe présente dans notre application.
+
+Par exemple, si nous voulons manipuler des produits dans notre application, au lieu de définir un tableau associatif avec clés et valeurs, nous pouvons **structurer** notre application de manière plus rigoureuse en définissant un nouveau type `Produit`.
+
+Par la suite, nous pourrons instancier des objets de type `Produit`. Nous allons donc parler dans un premier temps de la définition d'une classe, puis de l'instanciation d'objets.
+
+#### 1. Définition d'une classe
+
+On utilise le mot-clé `class` pour définir un nouveau type :
+
+```php
+class Produit
+{}
+```
+
+##### Attributs & méthodes
+
+Dans la définition d'une classe, on va pouvoir ajouter des **attributs**. Ces attributs appartiennent donc à la classe.
+
+On peut généralement appliquer le verbe **avoir** quand veut déterminer les différents attributs d'une classe. Par exemple : "Un produit a un nom et un prix" nous donne donc :
+
+```php
+class Produit
+{
+  public $nom;
+  public $prix;
+}
+```
+
+> Note : à partir de PHP 7.4, il est possible de typer les attributs d'une classe : `public string $nom` par exemple
+
+L'autre intérêt de créer de nouveaux types structurés dans notre application est de lui donner certaines **capacités**.
+
+Ces capacités se matérialisent sous forme de **méthodes** de classe.
+
+Par exemple, nous pourrions dire que notre classe `Produit` possède la capacité de renvoyer le prix TTC du produit, à partir de son attribut `prix` et d'un taux passé en paramètre :
+
+```php
+class Produit
+{
+  public $nom;
+  public $prix;
+
+  public function prixTTC(float $taux): float
+  {
+    return $this->prix + $this->prix * $taux;
+  }
+}
+```
+
+> Dans une méthode, on peut accéder aux attributs de la même classe en utilisant le mot-clé `$this`
+
+Chaque attribut ou méthode possède une **portée** : `public`, `protected` et `private`.
+
+##### Portées
+
+Les portées sont définies pour indiquer au code qui va instancier un objet d'un certain type ce à quoi il peut accéder ou non.
+
+Dans la classe `Produit` que nous avons définie plus haut, les 2 attributs sont publiques.
+
+Cela signifie qu'on pourra y accéder directement depuis une instance d'objet avec la syntaxe suivante :
+
+```php
+$monNomDeProduit = $monInstanceDeProduit->nom;
+```
+
+Si on rend un attribut `private` ou privé, alors on ne peut plus accéder à l'attribut directement depuis une instance.
+
+> La portée `protected` sera expliquée plus tard, dans le cadre de l'héritage.
+
+En réalité, nous allons définir ces attributs comme `private` afin de respecter le principe d'**encapsulation**.
+
+##### Encapsulation
+
+L'encapsulation consiste à placer les attributs d'une classe en `private`, puis de définir des méthodes d'**accession** et de **modification** de ces attributs, ou encore des **getters** et des **setters**.
+
+L'intérêt principal de ce principe est de permettre à la classe de garder le contrôle sur ses attributs. On décide de la façon dont on va pouvoir renvoyer un attribut à tout code extérieur manipulant une instance de cette classe.
+
+> Un autre intérêt peut être de passer un attribut en lecture seule par exemple, donc ne pas déclarer de méthode de modification pour cet attribut. Vu que l'attribut est privé, et qu'on ne dispose que d'une méthode publique d'accession à cet attribut, alors on ne peut que le récupérer, pas le modifier
+
+Réécriture de la classe `Produit` pour respecter le principe d'encapsulation :
+
+```php
+class Produit
+{
+  private $nom;
+  private $prix;
+
+  // Getter / Accesseur, pour l'encapsulation de notre attribut $nom
+  public function getNom(): ?string
+  {
+    // Ici on décide de renvoyer tout le temps le nom d'un produit en majuscules
+    return strtoupper($this->nom);
+  }
+
+  // Setter / Modificateur, toujours pour l'encapsulation
+  public function setNom(string $nom): void
+  {
+    $this->nom = $nom;
+  }
+
+  public function getPrix(): float
+  {
+    return $this->prix;
+  }
+
+  public function setPrix(float $prix)
+  {
+    $this->prix = $prix;
+  }
+
+  // Méthode utilitaire pour un produit, ne concerne pas l'encapsulation
+  public function getPrixTtc(float $taux): float
+  {
+    return $this->prix + $this->prix * $taux;
+  }
+}
+```
+
+#### 2. Instanciation d'objets de classes
+
+Une fois notre structure définie, à l'extérieur de la classe, nous avons la possibilité d'instancier et manipuler des produits. Pour ça, on peut tout simplement déclarer une variable et utiliser le mot-clé `new` avec le type souhaité :
+
+```php
+$produit = new Produit();
+```
+
+Une fois qu'on possède une instance de classe, on a accès à ses méthodes **publiques** :
+
+```php
+$produit->setNom("Téléviseur");
+echo $produit->getNom(); // Affichera "Téléviseur"
+
+$produit->setPrix(800);
+echo $produit->getPrixTTC(0.2); // Affichera 960
+```
+
+#### Constructeur
+
+Lors de l'instanciation d'une classe, on peut vouloir initialiser certaines valeurs par exemple. Pour cela, il est possible de définir un **constructeur** de classe, méthode qui s'exécutera automatiquement lors de l'instanciation de la classe :
+
+```php
+class Produit
+{
+  // ...
+
+  public function __construct(string $nom = "Téléviseur")
+  {
+    $this->nom = $nom;
+  }
+}
+```
+
+Pour utiliser le constructeur, on peut alors instancier notre objet avec des paramètres, comme si on appelait une fonction :
+
+```php
+// Mon produit aura pour nom "Téléphone", mais si j'avais instancié mon produit sans passer d'argument il se serait automatiquement appelé "Téléviseur"
+$produit = new Produit("Téléphone");
+```
+
+> En PHP, le constructeur d'une classe s'appelle une méthode **magique**, tout simplement car elle est automatiquement appelée dans un certain contexte (ici l'instanciation d'un objet de cette classe). Le nom d'une méthode magique est toujours précédé de 2 "underscores", caractère `_`
+
+#### Constantes de classe
+
+Il est possible de définir des constantes dans une classe. Cela peut être utile pour centraliser des données qu'on ne souhaite pas modifier au niveau de la classe elle-même, et ainsi pouvoir travailler avec dans ses différentes méthodes :
+
+```php
+<?php
+class Email
+{
+  private string $email;
+
+  //...
+
+  public function getDomain(): string
+  {
+    $emailParts = explode('@', $this->email);
+    return $emailParts[1];
+  }
+}
+
+class SpamChecker
+{
+  private const SPAM_DOMAINS = ['youhou.com', 'mailinator.com', 'free.fr', 'hello.net'];
+
+  public function isSpam(Email $email): bool
+  {
+    return array_search($email->getDomain(), self::SPAM_DOMAINS) !== false;
+  }
+}
+```
+
+> La manière d'accéder à une constante de classe diffère de l'accès à un attribut. Pour accéder à un attribut, on va utiliser une flèche `->` précédée du mot-clé `$this`. Pour accéder à une constante, on utilisera `self::MA_CONSTANTE` au sein de la classe, et `NomDeLaClasse::MA_CONSTANTE` en-dehors de la classe
