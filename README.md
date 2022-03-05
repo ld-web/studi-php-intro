@@ -23,6 +23,9 @@
   - [Constructeur](#constructeur)
   - [Constantes de classe](#constantes-de-classe)
   - [Exceptions](#exceptions)
+  - [L'héritage](#lhéritage)
+    - [Portées et héritage](#portées-et-héritage)
+  - [Classes abstraites](#classes-abstraites)
 
 ## Bases
 
