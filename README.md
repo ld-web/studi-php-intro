@@ -27,6 +27,17 @@
     - [Portées et héritage](#portées-et-héritage)
   - [Classes abstraites](#classes-abstraites)
 
+## Configuration
+
+### PDO
+
+Créer un fichier `db.ini` dans le dossier `pdo` avec le format suivant :
+
+```ini
+DB_USER="xxxxxxxxxxxx"
+DB_PASSWORD="xxxxxxxxxxxxxxx"
+```
+
 ## Bases
 
 ### Fichiers
